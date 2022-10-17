@@ -1,0 +1,16 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  background-image: url(../Libros.jpg);
+  height: 30rem;
+}
+header h1 {
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande", "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+  text-align: center;
+  color: antiquewhite;
+  text-shadow: 3px 5px black;
+  padding: 2rem;
+}/*# sourceMappingURL=style.css.map */
