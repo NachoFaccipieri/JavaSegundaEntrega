@@ -26,6 +26,15 @@ let precioLibro, indic=0, paginas, importado;
 
 
 
+//Este vector de objetos lo hice para que no sea tan tedioso probar las funciones ya que cada vez que cambiaba algo y lo quería probar, tenía que volver a ingresar libros manualmente. El problema es que para que funcione hay que comentar varias líneas: --> línea 22 --> línea 45 --> línea 149 y 150 --> línea 207 a 225
+/*
+const vecLibros = [
+    {nombre: 'Harry Potter', autor:'J. K. Rowling', precio: 7800},
+    {nombre: 'El poder del ahora', autor:'Eckhart Tolle', precio: 4200},
+    {nombre: 'El imperio de los algoritmos', autor:'Cecilia Danesi', precio: 4300},
+    {nombre: 'Voces de Chernobil', autor:'Alexiévich Svetlana', precio: 5800},
+] */
+
 
 let salir = false;
 
@@ -34,6 +43,7 @@ while(!salir){
     switch (eleccion) {
         case '1':
             lectura();
+
             break;
 
         case '2':
@@ -112,7 +122,6 @@ function lectura(){
     //Leo el nombre del libro. Si se ingresa un texto vacío, se vuelve a pedir el nombre
     nombre = prompt("Ingrese el nombre del libro (para finalizar la carga escriba FIN): ");
     while(nombre.length === 0){
-        alert("Ingrese el nombre del libro: ");
         nombre = prompt("Ingrese el nombre del libro (para finalizar la carga escriba FIN): ");
     }
 
@@ -121,7 +130,7 @@ function lectura(){
         //Busco coincidencias en el vector con el nombre del libro ingresado para saber si ya está en la lista.
         const comparacion = vecLibros.find((comp) => comp.nombre === nombre);
         if (comparacion){
-            alert("Libro ya agregado");
+            alert("Libro ya existente");
             break;
         }else{
             //Leo el autor del libro. Si se ingresa un texto vacío, se vuelve a pedir el autor
@@ -137,8 +146,8 @@ function lectura(){
                 alert("Error. No se ingresó un número.");
                 precioLibro=parseFloat(prompt("Ingrese el precio del libro: "));
             }
-            //importado = getImportado();
-            //precioLibro = productoImportado(importado, precioLibro);
+            importado = getImportado();
+            precioLibro = productoImportado(importado, precioLibro);
     
 
             const vecPremios = [];
@@ -171,7 +180,7 @@ function lectura(){
                 }else{
                     vecCategoriasTotales.push(categoria);
                 }
-                */ //-------> Todavía no funciona. Está en proceso
+                */ //-------> La idea sería poder tener una opción que me imprima todas las categorías ingresadas y todos los libros pertenecientes a ellas teniendo en cuenta que un libro puede pertenecer a más de una categoría, por ejemplo: "Autoayuda: libro1, libro2, libro3 \n Ciencia Ficcion: libro2, libro4, libro5". No tuve tiempo para pensarlo mucho, me agarró en semana de parciales pero está en proceso.
                 
                 categoria = prompt("Ingrese a qué categorías pertenece el libro (escriba FIN para finalizar): ");
             }
@@ -195,6 +204,7 @@ function imprimir(){
     console.log(vecLibros);
     for (const libro1 of vecLibros){
         console.log("Nombre del libro y autor: "+libro1.nombre+" "+libro1.autor);
+        /* */
         console.log("Precio: "+libro1.sumarIva().toFixed(2));
         console.log("Premios: ");
         if(libro1.premios.length !== 0){
@@ -205,13 +215,14 @@ function imprimir(){
         }else{
             console.log("El libro no tiene premios");
         }
+        
         console.log("Paginas: "+libro1.paginas);
 
         console.log("Categorias: ");
         for (const cat of libro1.categorias){
             console.log("--> "+cat);
         }
-        
+        /* */
     }
 }
 
@@ -219,10 +230,10 @@ function imprimir(){
 function ordenarAlf(libros){
     const opcion = prompt("Para ordenar de forma ascendente presionar S, caso contrario será de forma descendente.");
     if (opcion === 'S'){
-        libros.sort((a, b) => a.nombre - b.nombre );
+        libros.sort((a, b) => a.nombre.localeCompare(b.nombre));
         console.log(libros);
     } else {
-        libros.sort((a, b) => b.nombre - a.nombre);
+        libros.sort((a, b) => b.nombre.localeCompare(a.nombre));
         console.log(libros);
     }
 }
@@ -253,14 +264,14 @@ function buscarLibroMayor(libros){
     let buscar = prompt("Se buscarán libros desde: ");
     let resultado = libros.filter((elem) => elem.precio >= buscar );
     console.log(JSON.stringify(resultado));
-    // console.log("Lista de libros con precios mayores a: $"+buscar+"\n"+resultado);
+    // console.log("Lista de libros con precios mayores a: $"+buscar+"\n"+resultado); Quise hacerlo de esta forma pero el mensaje que me devuelve es: "Lista de libros con precios mayores a: *precio* [object Object]. Así me dijeron que use JSON"
 }
 
 function buscarLibroMenor(libros){
     const buscarPrecio = parseFloat(prompt("Se buscarán libros desde $0 hasta: "));
     const resultado = libros.filter((elem) => elem.precio <= buscarPrecio );
     console.log(JSON.stringify(resultado));
-    console.log("Lista de libros con precios menores a: $"+buscarPrecio+resultado);
+    //console.log("Lista de libros con precios menores a: $"+buscarPrecio+resultado);
 }
 
 
@@ -295,7 +306,6 @@ function productoImportado (importado, precio){
     }else{
         if(importado == "N"){
         alert("El producto no es importado. Sólo se calculará el IVA");
-        // precioTotal = calcularIVA(precio);
         return precio;
         }
     }
